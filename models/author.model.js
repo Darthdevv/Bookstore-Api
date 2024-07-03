@@ -13,13 +13,13 @@ const authorSchema = new mongoose.Schema(
       type: Date
     },
     books: [{
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Book"
     }],
   },
   {timestamps: true}
 );
 
-const Author = mongoose.model("Author", bookSchema);
+const Author = mongoose.model("Author", authorSchema);
 
 export default Author;

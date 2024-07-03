@@ -16,12 +16,11 @@ export const globalErrorHandler = (err, req, res, next) => {
   err.status = err.status || "error";
 
 
-  if (req.headerSent) {
+
     if (process.env.NODE_ENV === "development") {
       sendErrorDev(err, res);
     } else if (process.env.NODE_ENV === "production") {
       sendErrorProd(err, res);
     }
-  }
 
 };

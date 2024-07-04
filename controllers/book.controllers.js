@@ -20,7 +20,7 @@ export const createBook = catchAsync(async (req, res, next) => {
     return next(new appError('failed to publish book'));
   }
 
-  res.status(200).json({message: 'success', data: book});
+  res.status(201).json({message: 'success', data: book});
 });
 
 export const retreiveBooks = catchAsync(async (req, res, next) => {
@@ -44,6 +44,41 @@ export const retreiveBook = catchAsync(async (req, res, next) => {
   res.status(200).json({ book });
 });
 
-export const updateBook = catchAsync(async (req, res, next) => {});
+export const updateBook = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
 
-export const deleteBook = catchAsync(async (req, res, next) => {});
+  const { title, content, author, publishedDate } = req.body;
+
+  if (!title || !content || !author || !publishedDate) {
+    return next(new appError("Please fill all fields.", 400));
+  }
+
+  const updatedBook = await Book.findByIdAndUpdate(
+    id,
+    {
+      title,
+      content,
+      author,
+      publishedDate
+    },
+    { new: true }
+  );
+
+  if (!updatedBook) {
+    return next(new appError("failed to update this book", 400));
+  }
+
+  res.status(200).json({ updatedBook });
+});
+
+export const deleteBook = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return next(new appError("Book unavailable.", 400));
+  }
+
+  await Book.findByIdAndDelete(id);
+
+  res.status(204).json({ message: "Book deleted successfully." });
+});

@@ -21,12 +21,15 @@ app.use("/api/books", bookRoutes);
 app.use(notFound);
 app.use(globalErrorHandler);
 
-connectToMongoDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`App listening on port ${PORT} 📟`);
-    });
+connectToMongoDB();
+const server = app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT} 📟`);
+});
+
+process.on('unhandledRejection', err => {
+  console.log(err.namee, err.message);
+  console.log("UNHANDLED REJECTION! 💥 shutting down...");
+  server.close(() => {
+    process.exit(1);
   })
-  .catch((error) => {
-    console.error("Failed to connect to MongoDB, server not started 🙍🏻‍♂️", error);
-  });
+});

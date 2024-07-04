@@ -7,7 +7,6 @@ export const notFound = (req, res, next) => {
 };
 
 
-
 // Global Error Handling Middleware
 export const globalErrorHandler = (err, req, res, next) => {
 

@@ -2,6 +2,7 @@ import Author from "../models/author.model.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import appError from "../utils/appError.js"
 import Book from "../models/book.model.js";
+import APIFeatures from "../utils/apiFeatures.js";
 
 
 export const createAuthor = catchAsync(async (req, res, next) => {
@@ -33,13 +34,22 @@ export const createAuthor = catchAsync(async (req, res, next) => {
 });
 
 export const retreiveAuthors = catchAsync(async (req, res, next) => {
-  const authors = await Author.find().populate("books");
+  const features = new APIFeatures(Author.find(), req.query)
+    .filter()
+    .sort()
+    .paginate();
+  const authors = await features.query;
 
   if (!authors) {
     return next(new appError("No Authors Found", 404));
   }
 
-  res.status(200).json({ authors });
+  res.status(200).json({
+    status: "success",
+    requestedAt: req.requestTime,
+    results: authors.length,
+    data: { authors },
+  });
 });
 
 export const retreiveAuthor = catchAsync(async (req, res, next) => {

@@ -12,6 +12,10 @@ const PORT = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 app.use("/api/authors", authorRoutes);
 app.use("/api/books", bookRoutes);
 app.use(notFound);

@@ -1,4 +1,5 @@
 import Book from "../models/book.model.js";
+import APIFeatures from "../utils/apiFeatures.js";
 import appError from "../utils/appError.js";
 import { catchAsync } from "../utils/catchAsync.js";
 
@@ -24,13 +25,22 @@ export const createBook = catchAsync(async (req, res, next) => {
 });
 
 export const retreiveBooks = catchAsync(async (req, res, next) => {
-  const books = await Book.find();
+  const features = new APIFeatures(Book.find(), req.query)
+      .filter()
+      .sort()
+      .paginate();
+    const books = await features.query;
 
   if (!books) {
-    return next(new appError('No Books Found.', 404));
+      return next(new appError("No Books Found", 404))
   }
 
-  res.status(200).json({ books });
+  res.status(200).json({
+    status: "success",
+    requestedAt: req.requestTime,
+    results: books.length,
+    data: { books },
+  });
 });
 
 export const retreiveBook = catchAsync(async (req, res, next) => {

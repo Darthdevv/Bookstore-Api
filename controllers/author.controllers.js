@@ -34,7 +34,7 @@ export const createAuthor = catchAsync(async (req, res, next) => {
 });
 
 export const retreiveAuthors = catchAsync(async (req, res, next) => {
-  const features = new APIFeatures(Author.find(), req.query)
+  const features = new APIFeatures(Author.find().populate("books"), req.query)
     .filter()
     .sort()
     .paginate();

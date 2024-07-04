@@ -1,3 +1,9 @@
+process.on('uncaughtException', err => {
+  console.log(err.name, err.message);
+  console.log("UNHANDLED EXCEPTION! 💥 shutting down...");
+  process.exit(1);
+});
+
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -27,7 +33,7 @@ const server = app.listen(PORT, () => {
 });
 
 process.on('unhandledRejection', err => {
-  console.log(err.namee, err.message);
+  console.log(err.name, err.message);
   console.log("UNHANDLED REJECTION! 💥 shutting down...");
   server.close(() => {
     process.exit(1);

@@ -65,7 +65,7 @@ export const updateBook = catchAsync(async (req, res, next) => {
   );
 
   if (!updatedBook) {
-    return next(new appError("failed to update this book", 400));
+    return next(new appError("failed to update this Book", 400));
   }
 
   res.status(200).json({ updatedBook });

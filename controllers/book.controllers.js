@@ -38,7 +38,7 @@ export const retreiveBook = catchAsync(async (req, res, next) => {
   const book = await Book.findById(id);
 
   if (!book) {
-    return next(new appError("No Books Found.", 404));
+    return next(new appError("Couldn't find this Book.", 404));
   }
 
   res.status(200).json({ book });

@@ -32,9 +32,26 @@ export const createAuthor = catchAsync(async (req, res, next) => {
   res.status(201).json({ message: "success", data: author });
 });
 
-export const retreiveAuthors = catchAsync(async (req, res, next) => {});
+export const retreiveAuthors = catchAsync(async (req, res, next) => {
+  const authors = await Author.find().populate("books");
 
-export const retreiveAuthor = catchAsync(async (req, res, next) => {});
+  if (!authors) {
+    return next(new appError("No Authors Found", 404));
+  }
+
+  res.status(200).json({ authors });
+});
+
+export const retreiveAuthor = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const author = await Author.findById(id).populate("books");
+
+  if (!author) {
+    return next(new appError("Couldn't find this Author", 404));
+  }
+
+  res.status(200).json({ author });
+});
 
 export const updateAuthor = catchAsync(async (req, res, next) => {});
 
